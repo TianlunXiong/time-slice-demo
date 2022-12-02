@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时间分片原理</title>
+  <style>
+    .frame {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 128px;
+    }
+  </style>
+</head>
+<body>
+  <div id="lag" class="frame">
+    我是渲染线程
+  </div>
+
+  <!-- 持续调用渲染线程 -->
+  <script>
+    const el = document.getElementById('lag');
+
+    let start = Date.now();
+
+    function animation() {
+      const elapsed = Date.now() - start;
+      const t = (elapsed / 200) % 10;
+      const scale = 1 + (t > 5 ? 10 - t : t) / 2;
+      const transform = 'scaleX(' + (scale / 2.1) + ') scaleY(0.7) translateZ(0.1px)';
+
+      el.style.transform = transform;
+
+      requestAnimationFrame(animation);
+    }
+
+    requestAnimationFrame(animation);
+  </script>
+
+  <script src="./no-time-slice.js"></script>
+
+  <!-- <script src="./time-slice.js"></script> -->
+
+  <!-- <script src="./time-slice-better.js"></script> -->
+</body>
+</html>
